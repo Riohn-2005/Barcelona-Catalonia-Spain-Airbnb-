@@ -9,12 +9,12 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder, StandardScaler, OrdinalEncoder
 import seaborn as sns
 ```
-##Reading File
+## Reading File
 ```py
 df1 = pd.read_csv('/content/calendar (1).csv.gz')
 df2 = pd.read_csv('/content/listings (1).csv.gz')
 ```
-##Asked chatgpt meaning of all the labels:
+## Asked chatgpt meaning of all the labels:
 🔹 Identifiers & Metadata
 id, listing_url, scrape_id, last_scraped, source – Basic listing and dataset info.
 name, description, neighborhood_overview, picture_url – Listing details.
@@ -64,7 +64,7 @@ number_of_reviews – Total reviews.
 review_scores_rating – Overall rating (out of 100).
 instant_bookable – Whether guests can book instantly.
 
-##Preparing Data
+## Preparing Data
 ```py
 data = df2[[ 'host_since','host_identity_verified','property_type',
             'room_type','accommodates','bedrooms','beds','amenities','price',
