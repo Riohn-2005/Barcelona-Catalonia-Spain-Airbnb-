@@ -77,3 +77,6 @@ data= data[data['host_since'].notna()] # only 3 rows were dropped
 data['instant_bookable'] = data['instant_bookable'].map({'t': 1, 'f': 0})
 data['host_identity_verified'] = data['host_identity_verified'].map({'t': 1, 'f': 0})
 ```
+```py
+data.info() , data.isna().sum() #checking empty data
+```
