@@ -50,7 +50,7 @@ license, instant_bookable – Regulatory & booking status.
 calculated_host_listings_count (+_entire_homes/private/shared) – Host activity.
 estimated_occupancy_l365d, estimated_revenue_l365d – Performance estimates.
 
-Important labels i chose:
+### Important labels i chose:
 neighbourhood – Neighborhood name (raw).
 neighbourhood_cleansed – Standardized Airbnb neighborhood. *
 property_type – Type (Apartment, House, etc.)
