@@ -75,8 +75,11 @@ data['price'] = data['price'].replace('[\$,]', '', regex=True).astype(float)
 data['host_since'] = pd.to_datetime(data['host_since'], errors='coerce').dt.year
 data= data[data['host_since'].notna()] # only 3 rows were dropped
 data['instant_bookable'] = data['instant_bookable'].map({'t': 1, 'f': 0})
-data['host_identity_verified'] = data['host_identity_verified'].map({'t': 1, 'f': 0})
+data['host_identity_verified'] = data['ho<img width="511" height="629" alt="Screenshot 2025-10-07 at 12 28 30 PM" src="https://github.com/user-attachments/assets/cb415878-5878-4aa7-947d-2996735cb432" />
+st_identity_verified'].map({'t': 1, 'f': 0})
 ```
 ```py
 data.info() , data.isna().sum() #checking empty data
 ```
+
+![Uploading Screenshot 2025-10-07 at 12.28.30 PM.png…]()
