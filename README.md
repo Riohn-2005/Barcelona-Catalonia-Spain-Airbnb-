@@ -82,4 +82,5 @@ st_identity_verified'].map({'t': 1, 'f': 0})
 data.info() , data.isna().sum() #checking empty data
 ```
 
-![Uploading Screenshot 2025-10-07 at 12.28.30 PM.png…]()
+<img width="511" height="629" alt="Screenshot 2025-10-07 at 12 28 30 PM" src="https://github.com/user-attachments/assets/538b921b-c569-4f39-b1fc-a6602f6d9f54" />
+
