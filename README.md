@@ -122,6 +122,16 @@ plt.ylabel('Count of Listings', fontsize=12)
 
 Conclusion:  out of 18000 booking majority people book only for2,4,1
 
+### Average Price by Number of Accommodates
+```py
+plt.figure(figsize=(12,7))
+data.groupby('accommodates')['price'].mean().plot(kind = 'bar',color='skyblue', edgecolor='black')
+plt.title('Average Price by Number of Accommodates', fontsize=16, weight='bold')
+plt.xlabel('Number of Accommodates', fontsize=14)
+plt.ylabel('Average Price ($)', fontsize=14)
+```
+<img width="1019" height="635" alt="image" src="https://github.com/user-attachments/assets/d08fabe8-0e4a-43b0-ba2c-ed9c1daf8435" />
+
 ### Average Price Trend Over Time by Host Since
 ```py
 plt.figure(figsize=(12,6))
@@ -145,4 +155,35 @@ plt.xlabel('Year')
 plt.legend(title='Room Type')
 ```
 <img width="850" height="547" alt="image" src="https://github.com/user-attachments/assets/c8add8bf-d4f7-4684-b015-46cb216a2422" />
+
+###Mean vs Median Price by Room Type
+```py
+data.groupby('room_type')['price'].mean().sort_values(ascending=False).plot(kind = 'bar',label='Mean', alpha=0.6, color='cornflowerblue', edgecolor='black')
+data.groupby('room_type')['price'].median().sort_values(ascending=False).plot(kind = 'bar', label='Median', alpha=0.6, color='orange', edgecolor='black')
+plt.title('Mean vs Median Price by Room Type', fontsize=16, weight='bold')
+plt.xlabel('Room Type', fontsize=12)
+plt.ylabel('Price (USD)', fontsize=12)
+plt.legend(fontsize=11)
+```
+<img width="575" height="559" alt="image" src="https://github.com/user-attachments/assets/529b2f82-f4ce-489b-944b-5dfabed61493" />
+
+### Median Price by Host Verified
+```py
+data.groupby('host_identity_verified')['price'].median().plot(kind = 'bar',color='skyblue', edgecolor='black') 
+plt.title('Median Price by Host Verified (1 = YES , 0 = NO)', fontsize=16, weight='bold')
+plt.xlabel('Host Verified', fontsize=14)
+plt.ylabel('Median Price ($)', fontsize=14)
+```
+<img width="632" height="457" alt="image" src="https://github.com/user-attachments/assets/8fbe2ef0-caa3-49b9-bf90-340a91717ca6" />
+
+### Median Price by Instant Bookable
+```py
+plt.figure(figsize=(8,6))
+data.groupby('instant_bookable')['price'].median().plot(kind = 'bar',color='skyblue', edgecolor='black')
+plt.title('Median Price by Instant Bookable (1 = YES , 0 = NO)', fontsize=16, weight='bold')
+plt.xlabel('Instant Bookable', fontsize=14)
+plt.ylabel('Median Price ($)', fontsize=14)
+```
+<img width="719" height="549" alt="image" src="https://github.com/user-attachments/assets/bd5d2a54-68aa-4a91-9898-12667f61f64f" />
+
 
