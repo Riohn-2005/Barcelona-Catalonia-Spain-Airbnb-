@@ -49,6 +49,38 @@ license, instant_bookable – Regulatory & booking status.
 calculated_host_listings_count (+_entire_homes/private/shared) – Host activity.
 estimated_occupancy_l365d, estimated_revenue_l365d – Performance estimates.
 
+## Heatmap of Airbnb prices in Barcelona
+```py
+import folium
+from folium.plugins import HeatMap
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+
+# 1️⃣ Keep only rows with valid coordinates and price
+barcelona_data = df2[['latitude', 'longitude', 'price']].dropna(subset=['latitude', 'longitude', 'price'])
+
+# 2️⃣ Optionally normalize prices (recommended)
+scaler = MinMaxScaler()
+barcelona_data['price_scaled'] = scaler.fit_transform(barcelona_data[['price']])
+
+# 3️⃣ Create a base map centered on Barcelona
+m = folium.Map(location=[41.3851, 2.1734], zoom_start=12)
+
+# 4️⃣ Prepare clean heatmap data
+heat_data = barcelona_data[['latitude', 'longitude', 'price_scaled']].values.tolist()
+
+# 5️⃣ Add heatmap
+HeatMap(heat_data, radius=10, blur=15, max_zoom=1).add_to(m)
+
+# 6️⃣ Save map
+m.save('barcelona_heatmap.html')
+
+# If in Jupyter or Colab:
+m
+```
+<img width="1217" height="729" alt="Screenshot 2025-10-12 at 2 39 27 PM" src="https://github.com/user-attachments/assets/bfa4ad1c-d7d1-4bd1-8e53-b6f71ddcdd60" />
+
+
 ### Important labels i chose:
 neighbourhood – Neighborhood name (raw).
 neighbourhood_cleansed – Standardized Airbnb neighborhood. *
