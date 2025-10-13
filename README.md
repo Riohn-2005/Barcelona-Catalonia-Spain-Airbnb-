@@ -218,4 +218,69 @@ plt.ylabel('Median Price ($)', fontsize=14)
 ```
 <img width="719" height="549" alt="image" src="https://github.com/user-attachments/assets/bd5d2a54-68aa-4a91-9898-12667f61f64f" />
 
+## K-Means Clustering
+
+```py
+data = data.dropna() #dropping all empty rows 
+```
+```py
+le = LabelEncoder()
+data['neighbourhood_group_cleansed_num'] = le.fit_transform(data['neighbourhood_group_cleansed'])
+data['property_type_num'] = le.fit_transform(data['property_type'])
+data['room_type_num'] = le.fit_transform(data['room_type'])
+```
+```py
+X = data[['host_since', 'host_identity_verified', 'property_type_num', 'room_type_num',
+       'accommodates', 'bedrooms', 'beds', 'price',
+        'number_of_reviews','review_scores_rating', 'instant_bookable','neighbourhood_group_cleansed_num']]
+scalar = StandardScaler() # scale the given 4 dta points
+X_scaled = scalar.fit_transform(X) # scale the given 4 dta pointsz=(x-u)/sd
+```
+Finding best K 
+```py
+a=[] #list of sum of squared distances
+K=range(1,11)
+for i in K:
+  kmeans = KMeans(n_clusters=i, random_state=42)
+  kmeans.fit(X_scaled) #FUNCTION THAT TAKES ONLY X_SCALED
+  a.append(kmeans.inertia_) # sum of squared distances
+plt.plot(K,a, marker='*') # found 4 is ideal
+```
+<img width="578" height="416" alt="image" src="https://github.com/user-attachments/assets/ada6bbd9-4f5a-4aab-bd4f-86c7142cce12" />
+
+```py
+kmeans = KMeans(n_clusters=3, random_state=42)
+data['Cluster'] = kmeans.fit_predict(X_scaled)
+```
+Observing the Cluster based on the regions
+
+```py
+d = data.groupby(["neighbourhood_group_cleansed","Cluster"]).size().unstack(fill_value=0)
+sns.heatmap(d, annot=True, fmt='d', cmap='Blues')
+```
+<img width="669" height="432" alt="image" src="https://github.com/user-attachments/assets/a037c3af-9a31-43e9-8b43-c7037b786b0e" />
+
+```py
+plt.figure(figsize=(10,6))
+sns.boxplot(x='Cluster', y='price', data=data, showfliers=False)
+plt.title("Price Distribution by Cluster (without outliers)")
+```
+<img width="850" height="547" alt="image" src="https://github.com/user-attachments/assets/9400cdb2-edc3-4c76-8001-c2c7ee233c27" />
+
+```py
+plt.figure(figsize=(12,7))
+scatter = plt.scatter(
+    data['price'],
+    data['number_of_reviews'],
+    c=data['Cluster'],
+    cmap='rainbow',
+    s=75,              # slightly larger points
+    alpha=0.7,         # soft transparency 
+    )
+
+plt.title('Price vs Number of Reviews by Cluster', fontsize=18, fontweight='bold', pad=20)
+plt.xlabel('Price ($)', fontsize=14)
+plt.ylabel('Number of Reviews', fontsize=14)
+```
+<img width="1019" height="654" alt="image" src="https://github.com/user-attachments/assets/4f89e8c5-3400-40bc-8f5a-2d4481661f06" />
 
