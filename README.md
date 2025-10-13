@@ -284,3 +284,50 @@ plt.ylabel('Number of Reviews', fontsize=14)
 ```
 <img width="1019" height="654" alt="image" src="https://github.com/user-attachments/assets/4f89e8c5-3400-40bc-8f5a-2d4481661f06" />
 
+## Hypothesis testing(p-test)
+
+For α (significance level) = 0.05
+
+Null Hypothesis (H₀) :
+
+There is no difference in mean price between verified and unverified hosts.
+H₀ : μ(verified)  = μ(unverified)
+
+Alternative Hypothesis (H₁):
+
+There is a difference in mean price between verified and unverified hosts.
+H₁ : μ(verified)  =!  μ(unverified)
+```py
+data = data.dropna()
+
+np.random.seed(42)
+
+A = data[data['host_identity_verified'] == 1 ]
+B = data[data['host_identity_verified'] == 0 ]
+
+obs_diff = A['price'].mean() - B['price'].mean()
+
+dconc = np.concatenate([A['price'],B['price']])
+nA = len(A)
+n_perm =10000
+diffs= []
+
+for _ in range(n_perm):
+  np.random.shuffle(dconc)
+  a = dconc[:nA]
+  b = dconc[nA:]
+  diff = a.mean() - b.mean()
+  diffs.append(diff)
+
+p_val = np.mean(np.abs(diffs) >= abs(obs_diff))
+print("p-values is :",p_val)
+```
+```
+p-values is : 0.2894
+```
+Interpretation with your result
+
+p-value = 0.2894
+
+Since p > α, you fail to reject H₀.
+➡️ There is no statistically significant evidence that host verification status affects listing price.
