@@ -82,16 +82,27 @@ m
 
 
 ### Important labels i chose:
+
 neighbourhood – Neighborhood name (raw).
+
 neighbourhood_cleansed – Standardized Airbnb neighborhood. *
+
 property_type – Type (Apartment, House, etc.)
+
 room_type – Type of room (Entire home/apt, Private room, Shared room)
+
 accommodates – Maximum number of guests.
+
 bedrooms – Number of bedrooms.
+
 beds – Number of beds.
+
 price – Price per night (string with currency).
+
 number_of_reviews – Total reviews.
+
 review_scores_rating – Overall rating (out of 100).
+
 instant_bookable – Whether guests can book instantly.
 
 ## Preparing Data
