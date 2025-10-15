@@ -269,10 +269,7 @@ plt.legend()
 ```
 <img width="1009" height="553" alt="image" src="https://github.com/user-attachments/assets/97ea2adc-fd44-4494-a772-d3932a3af352" />
 
-<!--
-hello dhhdhhjji
-khegd
--->
+> ## ❓❓ Why a sudden rise in price in 2011 ❓❓
 
 ### Average Price by Room Type Over Time
 
@@ -284,6 +281,20 @@ plt.xlabel('Year')
 plt.legend(title='Room Type')
 ```
 <img width="850" height="547" alt="image" src="https://github.com/user-attachments/assets/c8add8bf-d4f7-4684-b015-46cb216a2422" />
+
+### Average Price by Neighbourhood for Hosts in  the year 2011 only
+```py
+# Convert host_since to datetime format
+df2['host_since'] = pd.to_datetime(df2['host_since'], errors='coerce')
+# Filter only hosts in 2011
+anamoly = df2[df2['host_since'].dt.year == 2011]
+plt.figure(figsize=(10,6))
+anamoly.groupby('neighbourhood_group_cleansed')['price'].mean().sort_values(ascending=False).plot(kind='bar')
+plt.xlabel('Neighbourhood Group')
+plt.ylabel('Average Price')
+plt.title('Average Price by Neighbourhood for Hosts in 2011')
+```
+<img width="850" height="668" alt="image" src="https://github.com/user-attachments/assets/1a395d52-da61-4d66-b7e1-b758791fe8be" />
 
 ### Mean vs Median Price by Room Type
 ```py
