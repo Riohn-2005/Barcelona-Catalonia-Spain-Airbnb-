@@ -269,6 +269,13 @@ plt.legend()
 ```
 <img width="1009" height="553" alt="image" src="https://github.com/user-attachments/assets/97ea2adc-fd44-4494-a772-d3932a3af352" />
 
+Conclusions :
+> 2011 saw an average price spike to above $500, which is much higher than any other year. Indicating a unique event or market condition.​
+
+> Listings for 1, 2, or 4 accommodates (the blue line) did not experience such dramatic increases, suggesting the rise was focused on larger-capacity, high-value entire homes/apartments.​
+
+> Prices normalized for later years, confirming this was not part of a long-term trend but a short-term bubble affecting new hosts of that year—most likely triggered by demand spikes for central, higher-capacity listings.
+
 > ## ❓❓ Why a sudden rise in price in 2011 ❓❓
 
 ### Average Price by Room Type Over Time
@@ -282,10 +289,8 @@ plt.legend(title='Room Type')
 ```
 <img width="850" height="547" alt="image" src="https://github.com/user-attachments/assets/c8add8bf-d4f7-4684-b015-46cb216a2422" />
 
-### Average Price by Neighbourhood for Hosts in  the year 2011 only
+### Average Price by Neighbourhood for Hosts in the year 2011 only
 ```py
-# Convert host_since to datetime format
-df2['host_since'] = pd.to_datetime(df2['host_since'], errors='coerce')
 # Filter only hosts in 2011
 anamoly = df2[df2['host_since'].dt.year == 2011]
 plt.figure(figsize=(10,6))
@@ -295,6 +300,38 @@ plt.ylabel('Average Price')
 plt.title('Average Price by Neighbourhood for Hosts in 2011')
 ```
 <img width="850" height="668" alt="image" src="https://github.com/user-attachments/assets/1a395d52-da61-4d66-b7e1-b758791fe8be" />
+
+### Price vs Time for Hosts in 2011
+```py
+# Convert host_since to datetime
+df2['host_since'] = pd.to_datetime(df2['host_since'], errors='coerce')
+# Filter only rows from the year 2011
+df_2011 = df2[df2['host_since'].dt.year == 2011]
+# Sort date to make the plot chronological
+df_2011 = df_2011.sort_values('host_since')
+plt.figure(figsize=(12,6))
+plt.plot(df_2011['host_since'], df_2011['price'], marker='o',linestyle='-',alpha = 0.5)
+plt.title('Price vs Time for Hosts in 2011')
+plt.xlabel('Date(2011)')
+plt.ylabel('Price ($)')
+```
+<img width="1014" height="547" alt="image" src="https://github.com/user-attachments/assets/5223bdce-4ede-4062-91a4-ec8c032789f3" />
+
+#### Based on all the above graphs:
+
+> The sharp rise in Airbnb prices—particularly for entire homes/apartments—was driven by the EIBTM 2011 international trade exhibition held from 29 Nov to 1 Dec 2011, which attracted thousands of visitors and exhibitors.
+
+Key Drivers:
+
+> Major Event Impact: EIBTM caused a surge in short-term accommodation demand, especially for entire homes/apartments, which are preferred by business travelers and groups for privacy and convenience.
+
+> Localized Demand: Central districts like Eixample, Ciutat Vella, and Sants-Montjuïc, closest to venues and business hubs—saw prices rise by 2–2.5×, while outer areas stayed stable.
+
+> Limited Supply: The short supply of entire homes in prime zones led to sharp, short-term price hikes.
+
+> Unique to 2011: No comparable international event occurred in other years, explaining why prices normalized afterward.
+
+##
 
 ### Mean vs Median Price by Room Type
 ```py
@@ -307,6 +344,16 @@ plt.legend(fontsize=11)
 ```
 <img width="575" height="559" alt="image" src="https://github.com/user-attachments/assets/529b2f82-f4ce-489b-944b-5dfabed61493" />
 
+Conclusions
+
+> Hotel rooms show the highest mean and median prices, with the mean slightly higher than the median, indicating presence of high-priced outliers elevating the average.​
+
+> Entire home/apartment listings also have high mean and median prices, but the gap between mean and median is more pronounced.
+
+> Private room and shared room categories have much lower mean and median prices, and the gaps between mean and median are less pronounced, showing these are more consistent and affordable options for travelers.​
+
+> For all room types, the mean is higher than the median, revealing **right-skewed** price distributions, likely due to a few very expensive listings in each category.
+
 ### Median Price by Host Verified
 ```py
 data.groupby('host_identity_verified')['price'].median().plot(kind = 'bar',color='skyblue', edgecolor='black') 
@@ -315,6 +362,9 @@ plt.xlabel('Host Verified', fontsize=14)
 plt.ylabel('Median Price ($)', fontsize=14)
 ```
 <img width="632" height="457" alt="image" src="https://github.com/user-attachments/assets/8fbe2ef0-caa3-49b9-bf90-340a91717ca6" />
+
+Conclusion :
+> Host verification status appears to influence pricing, with verified hosts generally offering lower median-priced listings.
 
 ### Median Price by Instant Bookable
 ```py
@@ -325,11 +375,14 @@ plt.xlabel('Instant Bookable', fontsize=14)
 plt.ylabel('Median Price ($)', fontsize=14)
 ```
 <img width="719" height="549" alt="image" src="https://github.com/user-attachments/assets/bd5d2a54-68aa-4a91-9898-12667f61f64f" />
+Conclusion :
+> Instant booking correlates with a higher median price
 
 ## K-Means Clustering
 
 ```py
-data = data.dropna() #dropping all empty rows 
+data = data.dropna() #dropping all empty rows
+#  18924 to 11378 enteries
 ```
 ```py
 le = LabelEncoder()
@@ -352,7 +405,7 @@ for i in K:
   kmeans = KMeans(n_clusters=i, random_state=42)
   kmeans.fit(X_scaled) #FUNCTION THAT TAKES ONLY X_SCALED
   a.append(kmeans.inertia_) # sum of squared distances
-plt.plot(K,a, marker='*') # found 4 is ideal
+plt.plot(K,a, marker='*') # found 3 is ideal
 ```
 <img width="578" height="416" alt="image" src="https://github.com/user-attachments/assets/ada6bbd9-4f5a-4aab-bd4f-86c7142cce12" />
 
@@ -375,6 +428,14 @@ plt.title("Price Distribution by Cluster (without outliers)")
 ```
 <img width="850" height="547" alt="image" src="https://github.com/user-attachments/assets/9400cdb2-edc3-4c76-8001-c2c7ee233c27" />
 
+Conclusions
+
+> Clusters 1 and 2 are most prevalent in central neighbourhoods (Eixample, Ciutat Vella), indicating these areas have the highest diversity and density of listings across cluster types.​
+
+> Cluster 2 likely represents higher-end or luxury listings, often concentrated in central, high-demand neighbourhoods; Cluster 0 covers more budget-friendly or economy offerings, distributed across all areas but less present in central zones.​
+
+> The central districts (Eixample, Ciutat Vella) are not only the most active but also host the pricier segments, as reflected in the prominent role of cluster 2, while outlying areas remain focused on cluster 0 (lower-priced).
+
 ```py
 plt.figure(figsize=(12,7))
 scatter = plt.scatter(
@@ -391,6 +452,8 @@ plt.xlabel('Price ($)', fontsize=14)
 plt.ylabel('Number of Reviews', fontsize=14)
 ```
 <img width="1019" height="654" alt="image" src="https://github.com/user-attachments/assets/4f89e8c5-3400-40bc-8f5a-2d4481661f06" />
+
+We can observe that purple, light green and red indicate Culsters 0, 1 and 2 respectively
 
 ## Hypothesis testing(p-test)
 
