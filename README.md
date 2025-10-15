@@ -85,16 +85,91 @@ data = df2[[ 'host_since','host_identity_verified','property_type',
 data['price'] = data['price'].replace('[\$,]', '', regex=True).astype(float)
 #converting the date into only year
 data['host_since'] = pd.to_datetime(data['host_since'], errors='coerce').dt.year
-data= data[data['host_since'].notna()] # only 3 rows were dropped
+# Drop rows with missing 'host_since' values (only 3 rows were removed)
+data= data[data['host_since'].notna()]
+# Convert 'instant_bookable' from 't'/'f' to binary 
 data['instant_bookable'] = data['instant_bookable'].map({'t': 1, 'f': 0})
+# Convert 'host_identity_verified' from 't'/'f' to binary
 data['host_identity_verified'] = data['host_identity_verified'].map({'t': 1, 'f': 0})
 ```
 ```py
 data.info() , data.isna().sum() #checking empty data
 ```
-<img width="511" height="629" alt="Screenshot 2025-10-07 at 12 28 30 PM" src="https://github.com/user-attachments/assets/538b921b-c569-4f39-b1fc-a6602f6d9f54" />
+```
+<class 'pandas.core.frame.DataFrame'>
+Index: 18924 entries, 0 to 18926
+Data columns (total 12 columns):
+ #   Column                        Non-Null Count  Dtype  
+---  ------                        --------------  -----  
+ 0   host_since                    18924 non-null  float64
+ 1   host_identity_verified        18924 non-null  int64  
+ 2   property_type                 18924 non-null  object 
+ 3   room_type                     18924 non-null  object 
+ 4   accommodates                  18924 non-null  int64  
+ 5   bedrooms                      16869 non-null  float64
+ 6   beds                          14873 non-null  float64
+ 7   price                         14912 non-null  float64
+ 8   number_of_reviews             18924 non-null  int64  
+ 9   review_scores_rating          13928 non-null  float64
+ 10  instant_bookable              18924 non-null  int64  
+ 11  neighbourhood_group_cleansed  18924 non-null  object 
+dtypes: float64(5), int64(4), object(3)
+memory usage: 1.9+ MB
+(None,
+ host_since                         0
+ host_identity_verified             0
+ property_type                      0
+ room_type                          0
+ accommodates                       0
+ bedrooms                        2055
+ beds                            4051
+ price                           4012
+ number_of_reviews                  0
+ review_scores_rating            4996
+ instant_bookable                   0
+ neighbourhood_group_cleansed       0
+ dtype: int64)
+```
+Conclusion:
 
-## Heatmap of Airbnb prices in Barcelona
+> The dataset contains 18,924 valid entries with 12 columns.
+
+> Categorical features such as property_type, room_type, instant_bookable, and neighbourhood_group_cleansed are complete (no missing values).
+
+> bedrooms is missing 2,055 values (≈10.9% of total data).
+
+> beds has 4,051 missing values (≈21.4%).
+
+> price is missing 4,012 values (≈21.2%).
+
+> review_scores_rating has the highest missing rate, with 4,996 missing values (≈26.4%).
+
+
+### Overall Summary
+```py
+summary = data.describe().T
+summary['missing_values'] = data.isna().sum()
+summary.style.background_gradient()
+```
+<img width="1076" height="322" alt="Screenshot 2025-10-11 at 9 36 08 PM" src="https://github.com/user-attachments/assets/7ce3fe04-78f8-47b5-a65c-f557d04e660f" />
+
+## Coorelation Plot
+```py
+plt.figure(figsize=(10,6))
+data=data.select_dtypes(include='number')  # keep only numeric columns
+corr = data.corr()
+sns.heatmap(corr, annot= True)
+```
+<img width="925" height="668" alt="image" src="https://github.com/user-attachments/assets/35df48cb-e7f4-4057-90f5-0b86eb1116a2" />
+Conclusion: 
+
+> accommodates, bedrooms, and beds show strong pairwise correlations (0.66 to 0.74), indicating larger listings generally offer more rooms and beds.​
+
+> price correlates well with accommodates (0.47), bedrooms (0.46), and price_per_accommodate (0.74), suggesting higher prices are tied to larger or more service-rich properties.
+
+## General Data analysis
+
+### Heatmap of Airbnb prices in Barcelona
 ```py
 import folium
 from folium.plugins import HeatMap
@@ -125,25 +200,6 @@ m
 ```
 <img width="1217" height="729" alt="Screenshot 2025-10-12 at 2 39 27 PM" src="https://github.com/user-attachments/assets/bfa4ad1c-d7d1-4bd1-8e53-b6f71ddcdd60" />
 
-### Overall Summary
-```py
-summary = data.describe().T
-summary['missing_values'] = data.isna().sum()
-summary.style.background_gradient()
-```
-<img width="1076" height="322" alt="Screenshot 2025-10-11 at 9 36 08 PM" src="https://github.com/user-attachments/assets/7ce3fe04-78f8-47b5-a65c-f557d04e660f" />
-
-## Coorelation Plot
-```py
-plt.figure(figsize=(10,6))
-data=data.select_dtypes(include='number')  # keep only numeric columns
-corr = data.corr()
-sns.heatmap(corr, annot= True)
-```
-<img width="925" height="668" alt="image" src="https://github.com/user-attachments/assets/35df48cb-e7f4-4057-90f5-0b86eb1116a2" />
-Conclusion: 
-
-## General Data analysis
 
 ### Average Price by Neighbourhood Group
 ```py
@@ -155,6 +211,14 @@ plt.ylabel('Average Price (USD)', fontsize=12)
 ```
 <img width="854" height="686" alt="image" src="https://github.com/user-attachments/assets/230beacd-246c-4880-90f1-cbfefc8c3a99" />
 
+Conclusion :
+
+> Eixample stands out as the most expensive area, with an average price notably higher than all other neighbourhoods.​
+
+> Sant Martí and Sants-Montjuïc follow, also commanding above-average prices, implying higher demand or premium listings in these districts.​
+
+> Neighbourhoods like Nou Barris present the lowest average prices, well below all other areas, suggesting more budget-friendly accommodation or less central locations
+
 ### Number of Listings by Accommodation Capacity
 ```py
 plt.figure(figsize=(10,6))
@@ -165,7 +229,13 @@ plt.ylabel('Count of Listings', fontsize=12)
 ```
 <img width="863" height="557" alt="image" src="https://github.com/user-attachments/assets/506ce746-a549-4de8-a057-7a18b43f64d9" />
 
-Conclusion:  out of 18000 booking majority people book only for2,4,1
+Conclusion:  
+
+> The majority of listings accommodate 2 to 4 guests, with listings for 2 guests being the most common by a significant margin (~4,000 listings).​
+
+> A good number of listings accommodate 1 guest and 6 guests, but these drop off quickly for larger capacities.​
+
+> Listings accommodating more than 6 guests become increasingly rare, showing fewer than a few hundred listings per category past this point.
 
 ### Average Price by Number of Accommodates
 ```py
@@ -176,6 +246,14 @@ plt.xlabel('Number of Accommodates', fontsize=14)
 plt.ylabel('Average Price ($)', fontsize=14)
 ```
 <img width="1019" height="635" alt="image" src="https://github.com/user-attachments/assets/d08fabe8-0e4a-43b0-ba2c-ed9c1daf8435" />
+
+Conclusion :
+
+> The average price increases steadily with capacity; listings for 1 guest are priced lowest, and price rises consistently as the number of accommodates increases.​
+
+> There is a sharp price jump for listings that host more than 10 guests, with extremely high averages for the largest capacities (especially at 16 accommodates, which significantly outpaces all others).​
+
+> Listings for groups of around 12–16 guests command a substantial premium, likely due to supply scarcity and the special requirements for hosting large groups.
 
 ### Average Price Trend Over Time by Host Since
 ```py
@@ -191,7 +269,13 @@ plt.legend()
 ```
 <img width="1009" height="553" alt="image" src="https://github.com/user-attachments/assets/97ea2adc-fd44-4494-a772-d3932a3af352" />
 
+<!--
+hello dhhdhhjji
+khegd
+-->
+
 ### Average Price by Room Type Over Time
+
 ```py
 data.groupby(['host_since', 'room_type'])['price'].mean().unstack().plot(kind='line', figsize=(10,6), marker='o',linewidth=2       )
 plt.title('Average Price by Room Type Over Time')
@@ -201,7 +285,7 @@ plt.legend(title='Room Type')
 ```
 <img width="850" height="547" alt="image" src="https://github.com/user-attachments/assets/c8add8bf-d4f7-4684-b015-46cb216a2422" />
 
-###Mean vs Median Price by Room Type
+### Mean vs Median Price by Room Type
 ```py
 data.groupby('room_type')['price'].mean().sort_values(ascending=False).plot(kind = 'bar',label='Mean', alpha=0.6, color='cornflowerblue', edgecolor='black')
 data.groupby('room_type')['price'].median().sort_values(ascending=False).plot(kind = 'bar', label='Median', alpha=0.6, color='orange', edgecolor='black')
