@@ -496,9 +496,9 @@ print("p-values is :",p_val)
 ```
 p-values is : 0.2894
 ```
-Interpretation with your result
 
 p-value = 0.2894
 
 Since p > α, you fail to reject H₀.
+
 ➡️ There is no statistically significant evidence that host verification status affects listing price.
