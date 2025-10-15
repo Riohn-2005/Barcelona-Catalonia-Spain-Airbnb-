@@ -1,4 +1,4 @@
-# Data analysis of the taught concept in ML Course.
+# Data analysis of the taught concepts in ML Course.
 ```py
 import numpy as np
 import pandas as pd
