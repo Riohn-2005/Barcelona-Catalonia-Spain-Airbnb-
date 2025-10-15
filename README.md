@@ -394,8 +394,8 @@ data['room_type_num'] = le.fit_transform(data['room_type'])
 X = data[['host_since', 'host_identity_verified', 'property_type_num', 'room_type_num',
        'accommodates', 'bedrooms', 'beds', 'price',
         'number_of_reviews','review_scores_rating', 'instant_bookable','neighbourhood_group_cleansed_num']]
-scalar = StandardScaler() # scale the given 4 dta points
-X_scaled = scalar.fit_transform(X) # scale the given 4 dta pointsz=(x-u)/sd
+scalar = StandardScaler() 
+X_scaled = scalar.fit_transform(X) 
 ```
 Finding best K 
 ```py
